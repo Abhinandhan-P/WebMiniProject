@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="colorApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AngularJS Color Changer</title>
+    <script src="angular.js"></script>
+    <style>
+        .color-box {
+            padding: 20px;
+            font-size: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body ng-controller="ColorController">
+
+    <h2>Pick a Color:</h2>
+    <select ng-model="selectedColor">
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+        <option value="orange">Orange</option>
+        <option value="purple">Purple</option>
+    </select>
+
+    <div class="color-box" ng-style="{'color': selectedColor}">
+        This text changes color dynamically!
+    </div>
+
+    <script>
+        var app = angular.module("colorApp", []);
+        app.controller("ColorController", function($scope) {
+            $scope.selectedColor = "black"; // Default color
+        });
+    </script>
+
+</body>
+</html>

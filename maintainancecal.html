@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="calorieApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Calorie Calculator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #121212;
+            margin: 0;
+            padding: 20px;
+            color: #FFA500;
+            background: url('/gymimg/Abhi.logo.jpeg') no-repeat center;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background-size: cover;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+            border: 2px solid #FFA500;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Dark overlay for readability */
+            z-index: 0;
+        }
+        .container * {
+            position: relative;
+            z-index: 1;
+        }
+        h2 {
+            color: #FFA500;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid #FFA500;
+            border-radius: 4px;
+            background-color: #333;
+            color: #FFA500;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ffcc00;
+        }
+        .result {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffcc00;
+            margin-top: 15px;
+        }
+        .button {
+            background-color: #FFA500;
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #ffcc00;
+        }
+    </style>
+</head>
+<body ng-controller="CalorieController">
+
+    <div class="container">
+        <h2>🔥 Maintenance Calorie Calculator 🔥</h2>
+
+        <label for="weight">Weight (kg):</label>
+        <input type="number" ng-model="weight" placeholder="Enter weight" required>
+
+        <label for="height">Height:</label>
+        <div style="display: flex; gap: 10px;">
+            <input type="number" ng-model="heightFeet" placeholder="Feet" required>
+            <input type="number" ng-model="heightInches" placeholder="Inches" required>
+        </div>
+
+        <label for="age">Age:</label>
+        <input type="number" ng-model="age" placeholder="Enter age" required>
+
+        <label>Gender:</label>
+        <select ng-model="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <label>Activity Level:</label>
+        <select ng-model="activityFactor">
+            <option value="1.2">Sedentary (little to no exercise)</option>
+            <option value="1.375">Light exercise (1-3 days/week)</option>
+            <option value="1.55">Moderate exercise (3-5 days/week)</option>
+            <option value="1.725">Heavy exercise (6-7 days/week)</option>
+            <option value="1.9">Athlete (twice per day)</option>
+        </select>
+
+        <button class="button" ng-click="calculateCalories()">Calculate</button>
+
+        <div class="result" ng-if="maintenanceCalories">
+            Maintenance Calories: {{ maintenanceCalories }} kcal/day
+        </div>
+    </div>
+
+    <script>
+        var app = angular.module("calorieApp", []);
+        app.controller("CalorieController", function($scope) {
+            $scope.calculateCalories = function() {
+                if ($scope.weight && $scope.heightFeet && $scope.heightInches !== undefined && $scope.age && $scope.gender && $scope.activityFactor) {
+                    // Convert height from feet & inches to cm
+                    var heightCm = ($scope.heightFeet * 30.48) + ($scope.heightInches * 2.54);
+
+                    var BMR;
+                    if ($scope.gender === "male") {
+                        BMR = 88.36 + (13.4 * $scope.weight) + (4.8 * heightCm) - (5.7 * $scope.age);
+                    } else {
+                        BMR = 447.6 + (9.2 * $scope.weight) + (3.1 * heightCm) - (4.3 * $scope.age);
+                    }
+                    $scope.maintenanceCalories = Math.round(BMR * $scope.activityFactor);
+                } else {
+                    $scope.maintenanceCalories = null;
+                }
+            };
+        });
+    </script>
+
+</body>
+</html>
